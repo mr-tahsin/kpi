@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>KPI Management System</title>
+
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="app-wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div id="leftMenu"></div>
+      </aside>
+
+      <!-- Main Area -->
+      <div class="main-wrapper">
+        <!-- Top Menu -->
+        <header class="topbar">
+          <div id="topMenu"></div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="content">
+          <!-- Page Header -->
+          <div class="page-header">
+            <div>
+              <h1>KPI Dashboard</h1>
+              <p>Performance overview and organizational insights</p>
+            </div>
+
+            <div class="header-date">
+              <i class="fa-regular fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+
+          <!-- KPI Summary -->
+          <section class="dashboard-grid summary-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+
+              <div class="stat-info">
+                <span>Total KPIs</span>
+                <strong>128</strong>
+                <small>
+                  <i class="fa-solid fa-arrow-up"></i>
+                  12% from last cycle
+                </small>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+
+              <div class="stat-info">
+                <span>Validated KPIs</span>
+                <strong>104</strong>
+                <small>
+                  <i class="fa-solid fa-arrow-up"></i>
+                  81.2% completion
+                </small>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon orange">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+
+              <div class="stat-info">
+                <span>Avg. Achievement</span>
+                <strong>78.6%</strong>
+                <small>
+                  <i class="fa-solid fa-arrow-up"></i>
+                  4.8% improvement
+                </small>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon purple">
+                <i class="fa-solid fa-users"></i>
+              </div>
+
+              <div class="stat-info">
+                <span>Employees</span>
+                <strong>1,246</strong>
+                <small>
+                  <i class="fa-solid fa-user-plus"></i>
+                  Active participants
+                </small>
+              </div>
+            </div>
+          </section>
+
+          <!-- Charts Row -->
+          <section class="dashboard-grid chart-grid">
+            <!-- Achievement Chart -->
+            <div class="dashboard-card chart-card large-card">
+              <div class="card-header">
+                <div>
+                  <h3>Achievement Trend</h3>
+                  <p>Monthly KPI achievement percentage</p>
+                </div>
+
+                <select class="chart-select">
+                  <option>2026</option>
+                  <option>2025</option>
+                  <option>2024</option>
+                </select>
+              </div>
+
+              <div class="chart-container">
+                <canvas id="achievementChart"></canvas>
+              </div>
+            </div>
+
+            <!-- KPI Distribution -->
+            <div class="dashboard-card chart-card">
+              <div class="card-header">
+                <div>
+                  <h3>KPI Status</h3>
+                  <p>Current KPI distribution</p>
+                </div>
+              </div>
+
+              <div class="chart-container doughnut-container">
+                <canvas id="kpiStatusChart"></canvas>
+              </div>
+
+              <div class="chart-legend">
+                <div>
+                  <span class="legend-dot completed"></span>
+                  Completed
+                </div>
+
+                <div>
+                  <span class="legend-dot pending"></span>
+                  Pending
+                </div>
+
+                <div>
+                  <span class="legend-dot validation"></span>
+                  Validation
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Department Performance -->
+          <section class="dashboard-card performance-card">
+            <div class="card-header">
+              <div>
+                <h3>Department Performance</h3>
+                <p>Overall KPI achievement by department</p>
+              </div>
+
+              <button class="outline-btn">
+                <i class="fa-solid fa-download"></i>
+                Export
+              </button>
+            </div>
+
+            <div class="performance-list">
+              <div class="performance-item">
+                <div class="performance-name">
+                  <span>HR & Administration</span>
+                  <strong>92%</strong>
+                </div>
+
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 92%"></div>
+                </div>
+              </div>
+
+              <div class="performance-item">
+                <div class="performance-name">
+                  <span>Finance</span>
+                  <strong>86%</strong>
+                </div>
+
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 86%"></div>
+                </div>
+              </div>
+
+              <div class="performance-item">
+                <div class="performance-name">
+                  <span>Production</span>
+                  <strong>81%</strong>
+                </div>
+
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 81%"></div>
+                </div>
+              </div>
+
+              <div class="performance-item">
+                <div class="performance-name">
+                  <span>Marketing</span>
+                  <strong>76%</strong>
+                </div>
+
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 76%"></div>
+                </div>
+              </div>
+
+              <div class="performance-item">
+                <div class="performance-name">
+                  <span>IT</span>
+                  <strong>69%</strong>
+                </div>
+
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 69%"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Bottom Dashboard -->
+          <section class="dashboard-grid bottom-grid">
+            <!-- Quick Actions -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div>
+                  <h3>Quick Actions</h3>
+                  <p>Frequently used KPI operations</p>
+                </div>
+              </div>
+
+              <div class="quick-actions">
+                <a href="pages/parameter-entry.html" class="quick-action">
+                  <i class="fa-solid fa-sliders"></i>
+                  <span>Parameter Entry</span>
+                </a>
+
+                <a href="pages/kpi-validation.html" class="quick-action">
+                  <i class="fa-solid fa-square-check"></i>
+                  <span>KPI Validation</span>
+                </a>
+
+                <a href="pages/kpi-set.html" class="quick-action">
+                  <i class="fa-solid fa-bullseye"></i>
+                  <span>KPI Set</span>
+                </a>
+
+                <a href="pages/achievement-entry.html" class="quick-action">
+                  <i class="fa-solid fa-chart-simple"></i>
+                  <span>Achievement Entry</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="dashboard-card">
+              <div class="card-header">
+                <div>
+                  <h3>Recent Activities</h3>
+                  <p>Latest KPI activities</p>
+                </div>
+
+                <a href="#" class="view-all">View All</a>
+              </div>
+
+              <div class="activity-list">
+                <div class="activity">
+                  <div class="activity-icon">
+                    <i class="fa-solid fa-check"></i>
+                  </div>
+
+                  <div>
+                    <strong>KPI validation completed</strong>
+                    <small>HR Department · 15 minutes ago</small>
+                  </div>
+                </div>
+
+                <div class="activity">
+                  <div class="activity-icon orange">
+                    <i class="fa-solid fa-pen"></i>
+                  </div>
+
+                  <div>
+                    <strong>Achievement updated</strong>
+                    <small>Production · 42 minutes ago</small>
+                  </div>
+                </div>
+
+                <div class="activity">
+                  <div class="activity-icon purple">
+                    <i class="fa-solid fa-plus"></i>
+                  </div>
+
+                  <div>
+                    <strong>New KPI created</strong>
+                    <small>Finance · 1 hour ago</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+          <div id="footer"></div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

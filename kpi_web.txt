@@ -1,0 +1,129 @@
+Notes: Page must be lucrative, lightweight design, SEO Friendly for MASCO Group, and most importantly mobile-responsive. Do not provide explanation just provide codes and if require changes tell me which place to replace with what code. Maintain the same color tone.
+
+
+
+
+
+BG color will be white and #30508F.
+----------
+I want to create a web design for a KPI project using html, css, and JavaScript. leftMenu.html, topMenu.html, and footer.html will be written once and then just join with all pages using JS.
+
+Code structure will be as follows:
+=> index.html (index page)
+=> assets folder -> 
+i) css (this folder will have main.css, and other css)
+ii) js (this folder will have main.js, and other js)
+iii) img
+iv) doc
+=> inc (this folder will have leftMenu.html, topMenu.html, and footer.html)
+=> pages (all my .html pages will be here)
+
+Now, I want you to create the following pages:
+=> index.html 
+This page will have some lucrative reports, graphs, dashboards, and charts.
+=> LeftMenu.html
+This page will have 5 menu name on the left under two section. Section A name will be HR Segment that will have menus named (Parameter Entry, KPI Validation, Achievement Validation) and Section B name will be User Segment that will have menus named (KPI Set, Achievement Entry)
+Note that: Menu bar should be minimizable with fixed minimized button. Each menu will be an a tag so that I can link pages.
+=> footer.html
+=> topMenu.html
+
+Notes: Page must be lucrative, lightweight design and most importantly mobile-responsive. Do not provide explanation just provide codes and if require changes tell me which place to replace with what code. 
+
+
+=> Parameter Entry 
+This page will have the following sub navigation page under the Parameter Entry page. These are (i) Period Setup (ii) UOM Setup (iii) KPI Entry
+i) Period Setup
+I created a new page in E:\MASCO\1. PROJECTS\16. KPI\KPI Web Design\pages\periodSetup.html.
+This page will have- Financial year: text field, From Month: all full month name dropdown, To Month: all full month name dropdown, Financial Year wise Quarter Set- dropdown (Q1, Q2, Q3, Q4). Then at last save button. Remember the save data will appear as list at bottom. The list will have all the saved details as list rows (descending order) and action button will have delete button. Clicking the button will delete the rows. 
+Notes: Page must be lucrative, lightweight design and most importantly mobile-responsive. Do not provide explanation just provide codes and if require changes tell me which place to replace with what code. Rmember the data of this page need to store. Because we need use the saved data of this page to another page or pages. You can save data on browser.
+
+
+
+(ii) UOM Setup 
+Notes: Page must be lucrative, lightweight design and most importantly mobile-responsive. Do not provide explanation just provide codes and if require changes tell me which place to replace with what code. Rmember the data of this page need to store. Because we need use the saved data of this page to another page or pages. You can save data on browser. 
+This page will have the following sub navigation page under the Parameter Entry page. This page will have: UOM Name: text input field. Range from: number input. Range to: number input. Then at last is active checkbox. By default, is active will be pre selected. The list will have all the saved details as list rows (descending order) and action button will have delete and edit button. Clicking the delete button will delete the rows and edit button will give option to update the data. 
+
+
+
+
+(iii) KPI Entry
+Notes: Page must be lucrative, lightweight design and most importantly mobile-responsive. Do not provide explanation just provide codes and if require changes tell me which place to replace with what code. Remember the data of this page need to store. Because we need use the saved data of this page to another page or pages. You can save data on browser. 
+This page will have the following sub navigation page under the Parameter Entry page. This page will have these fields: Financial Year (fin yr dropdown will be loaded from Period Setup page), Quarter(quarter dropdown will be loaded from Period Setup page), Month(read only. Will load from period setup page from Month and To Month merge as January-March for example. Note that it can not be even edit using browser inspection. Need to block that),  Unit/SBU: dropdown field (Head Office, MASCO Corporate, Concept Knitting Ltd. , MPL Wear), Department: dropdown field (MIS; Accounts and Finance; HR, Admin and Compliance; Supply Chain),  Section: dropdown field (System Development, System Analysis, Software, Accounts, VAT & Tax,  Finance, HR, Admin). After the section selection there will be a button named "Add KPI". Once click Add KPI then following fields will appear. 
+KPI Name - text field, Data source - dropdown field (ERP, Entry, Manual), Priority (by default read only 1). Then add more (as plus button). If click plus button then same new row KPI Name, Data Source, Priority (second rows priority will be 2). On each row there will be a plus(for add more) and cross(delete that row) will be shown at the last action button. Note that I can reshuffile by dragging these rows when the rows are more than one. Once I reshuffle the priority number will be automatically change based on the row number. Once done then finally save. 
+At the bottom there will be a list options that will have the following list name and descending order.
+Financial Year, Quarter, Month, Unit, Department, Section, KPI Details, Action (Edit, Delete). Once click KPI details, then a modal will open. Modal will show all the KPI Names(questions) as multiple rows, data source, priority number for per row wise.  I want filter search above list rows. 
+
+
+
+
+
+
+
+=> KPI Set 
+Notes: Page must be lucrative, lightweight design and most importantly mobile-responsive. Do not provide explanation just provide codes and if require changes tell me which place to replace with what code. Rmember the data of this page need to store. Because we need to use the saved data of this page to another page or pages. You can save data on browser. Keep the font size larger standard size.
+
+At top this page will have segment named "Search Engine" Under the search engine there will be a table of multiple random number between 3 to 6 numerical digit (e.g. 2376543, 184288). Each number will have Unit, Department, Section visible beside the number. Remember these random numerical number will be generated from the saved data of the KPI entry page combinations. That means for each saved row of Unit, Department, and Section form the KPI Entry page, you will provide me a random number and the exact same Unit, Department, and Section from the KPI entry page. Beside each number I will have the radio button. I will select the number and then click Log In button. Once click login then below I will have the dropdown options to select Financial Year and Quarter that will be load from the Period Setup page saved data. Once I will select Quarter dropdown,  Month field data will be visible (read only. Will load from period setup page from Month and To Month merge as January-March for example. Note that it can not be even edit using browser inspection. Need to block that). Once select the quarter then instantly a new section will appear below as row wise. Note that 
+Rows will have the the following fields and each column need appropiate column name:
+KPI Name (data will be load from KPI Entry page based on the match of Financial Year, Quarter, Unit, Department, and Section - non editable and even browser inspection will not work. Need block.)
+UOM (data will be load as like dropdown from UOM Setup page)
+Weight (number field input)
+Target  (number field input)
+Priority (automatically load from KPI Entry page-read only) (dragging will change the priority number automatically that you have done on the KPI Entry page)
+Remarks (text field input)
+Save button.
+Note that each row will have plus/minus button to add new rows or to remove any rows. But note that I can not remove the rows that have been loaded from KPI entry page. But I can remove rows that will be created by me. But I can reshuffle any rows by dragging and the priority number will automatically change based on the row numbers. 
+
+Finally, in the below the last section will have a list. List will have the following columns. Make sure you provide the column title:
+KPI Name, UOM, Weight, Target, Priority, Remarks, Action (Edit/Delete). Remember, I will not be able to delete those rows that will come from KPI Entry page, But I can edit those rows. I can edit and delete the rows that I will newly created by me. 
+
+Changes===
+1. After clicking the login from the KPI Set Configuration, I want to view the only loaded Financial year from the KPI Entry page based on Unit, Department, and Section. 
+NOTE that you do not need to provide the entire page. Just provide me the snippet that I need to replace and mention from where to where. 
+Let me know if I have to provide you the codes from KPI entry page?
+2. On KPI Target Configuration section,  I want to load UOM column dropdown from UOM Setup page. UOM Setup Page Javascript is follows:
+3. Remember On KPI Target Configuration under KPI Set page, I will click plus button currently a new row open, but I am unable to write the KPI Name. Here I want to write KPI Name. When I click edit I also want to edit only those KPI names that have been added by me. But note that KPI Name rows that will be come from KPI Entry page will be non editable as like now. 
+4. Now I want, each Search Number should have unique save and delete store. But currently 4 search number are showing the same saved KPI data. I want unique.
+5. Now, I want to hide the Saved KPI Set List initially. Once I will login by clicking a serial number then only the saved kpi list data for that search number will appear only.
+6. Now when I login and want to add new rows from KPI Target Configuration the save button shows Updated KPI Set. But it should Save KPI. Only when I click eidt pen icon from the Saved KPI Set List only then the Updated KPI Set should appear. 
+
+Changes === (12th September)
+1. Now I want to change the KPI Set page. When I get data from KPI Entry Pages based on Financial Year and Quarter then previously I was not allowed to delete those rows on KPI Set page. Here is the change, that now I want to have the options to select the rows that I want to select based on the matching year and quarter combination. I will have the options to select the rows that was set from the KPI Entry page. Rest will be same. Do not change anything else. Do not explain just provide which part to replace with what code snippets with name.
+
+
+
+
+
+=> KPI Validation
+Notes: Page must be lucrative, lightweight design and most importantly mobile-responsive and color and font style and icons should be match with the previous pages. Keep same styles, formats, and alignment just increase the font sizes so that it can readable. Use inc/leftMenu.html, inc/footer.html, and inc/topMenu.html. Do not provide explanation. css location ../assets/css/fileName.css and js location ../assets/js/fileName.js
+
+After KPI set page I need this KPI Validation page. 
+On this at top section we will have the followings:
+Financial year (dropdowns from KPI Set page saved data)
+Quarter (dropdowns from KPI Set page saved data)
+Unit (dropdowns from KPI Set page saved data)
+Department (dropdowns from KPI Set page saved data)
+search button. 
+Based on the above parameters, clicking the save button will bring new section below. That will have row wise:
+SL,
+Search Number,
+Employee Name (Each row of this column will have fixed value named "Full Name")
+Section,
+Designation (Each row of this column will have fixed value named "Designation")
+KPI Details (by clicking KPI Details a modal will open where all the KPI data based on that search number will be shown serially. Columns are:
+KPI Name,
+UOM (UOM will load from UOM setup page)
+Weight,
+Target,
+Priority (as readonly button. Same like KPI Set page)
+Remarks 
+Action (plus, minus icon)
+Note that here in the modal, I can edit each column data I want to edit. And I can remove any rows or add any rows I want. And then finally I will click on update button. Also provide validation that weight's number will not exceed 100. I can also drag to change the priority number.
+
+
+
+
+
+
+
+
+

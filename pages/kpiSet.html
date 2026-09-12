@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>KPI Set | KPI Management System</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <link rel="stylesheet" href="../assets/css/kpiSet.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="app-wrapper">
+      <aside class="sidebar" id="sidebar">
+        <div id="leftMenu"></div>
+      </aside>
+
+      <div class="main-wrapper">
+        <header class="topbar">
+          <div id="topMenu"></div>
+        </header>
+
+        <main class="content">
+          <!-- PAGE HEADER -->
+          <div class="page-header">
+            <div class="page-title-with-icon">
+              <div class="page-title-icon">
+                <i class="fa-solid fa-sliders"></i>
+              </div>
+
+              <div>
+                <h1>KPI Set</h1>
+                <p>Configure KPI targets, weights and measurement units</p>
+              </div>
+            </div>
+
+            <div class="header-date">
+              <i class="fa-regular fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+
+          <!-- SEARCH ENGINE -->
+          <section class="dashboard-card kpi-set-search-card">
+            <div class="card-header">
+              <div>
+                <h3>
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  Search Engine
+                </h3>
+                <p>Select a KPI configuration to begin setting KPI targets</p>
+              </div>
+
+              <span class="record-count">
+                <span id="searchRecordCount">0</span>
+                Records
+              </span>
+            </div>
+
+            <div class="search-engine-wrapper">
+              <div class="search-engine-input">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                  type="search"
+                  id="kpiSetSearch"
+                  placeholder="Employee ID, unit, department or section..."
+                  autocomplete="off"
+                />
+
+                <button
+                  type="button"
+                  id="clearKPISetSearch"
+                  title="Clear Search"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="kpi-set-search-table">
+                <thead>
+                  <tr>
+                    <th>Select</th>
+                    <th>Employee ID</th>
+                    <th>Unit / SBU</th>
+                    <th>Department</th>
+                    <th>Section</th>
+                  </tr>
+                </thead>
+
+                <tbody id="kpiSetSearchList"></tbody>
+              </table>
+            </div>
+
+            <div id="emptyKPISetSearch" class="empty-kpi-set-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
+
+              <h4>No KPI Configuration Found</h4>
+
+              <p>
+                KPI configurations saved from the KPI Entry page will appear
+                here.
+              </p>
+            </div>
+
+            <div id="noKPISetSearchResult" class="empty-kpi-set-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-filter"></i>
+              </div>
+
+              <h4>No Matching Configuration</h4>
+
+              <p>Try changing your search keyword.</p>
+            </div>
+
+            <div class="search-login-area">
+              <button
+                type="button"
+                id="kpiSetLoginBtn"
+                class="btn-primary"
+                disabled
+              >
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Log In
+              </button>
+            </div>
+          </section>
+
+          <!-- KPI SET CONFIGURATION -->
+          <section
+            class="dashboard-card kpi-set-config-card"
+            id="kpiSetConfigCard"
+          >
+            <div class="card-header">
+              <div>
+                <h3>KPI Set Configuration</h3>
+                <p>Select the financial period and configure each KPI</p>
+              </div>
+
+              <div class="selected-configuration" id="selectedConfiguration">
+                <span id="selectedSearchNumber">—</span>
+              </div>
+            </div>
+
+            <!-- SELECTED ORGANIZATION -->
+            <div class="selected-org-card">
+              <div class="selected-org-item">
+                <span>Unit / SBU</span>
+                <strong id="selectedUnit">—</strong>
+              </div>
+
+              <div class="selected-org-item">
+                <span>Department</span>
+                <strong id="selectedDepartment">—</strong>
+              </div>
+
+              <div class="selected-org-item">
+                <span>Section</span>
+                <strong id="selectedSection">—</strong>
+              </div>
+            </div>
+
+            <!-- PERIOD -->
+            <div class="kpi-set-period-grid">
+              <div class="form-group">
+                <label for="kpiSetFinancialYear">
+                  Financial Year
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar-days"></i>
+
+                  <select id="kpiSetFinancialYear">
+                    <option value="">Select Financial Year</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="kpiSetQuarter">
+                  Quarter
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-layer-group"></i>
+
+                  <select id="kpiSetQuarter">
+                    <option value="">Select Quarter</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="kpiSetMonth">Month</label>
+
+                <div class="input-wrapper readonly-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+
+                  <input
+                    type="text"
+                    id="kpiSetMonth"
+                    readonly
+                    tabindex="-1"
+                    aria-readonly="true"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- KPI ROWS -->
+            <div id="kpiSetEntryArea" class="kpi-set-entry-area">
+              <div class="kpi-set-area-header">
+                <div>
+                  <h4>KPI Target Configuration</h4>
+                  <p>
+                    Configure UOM, weight, target and remarks. Drag rows to
+                    change priority.
+                  </p>
+                </div>
+
+                <span id="kpiSetRowCount">0 KPI</span>
+              </div>
+
+              <div class="kpi-set-table-wrapper">
+                <div class="kpi-set-table-head">
+                  <div>KPI Name</div>
+                  <div>UOM</div>
+                  <div>Weight</div>
+                  <div>Target</div>
+                  <div>Priority</div>
+                  <div>Remarks</div>
+                  <div>Action</div>
+                </div>
+
+                <div id="kpiSetRows" class="kpi-set-rows"></div>
+              </div>
+
+              <div class="kpi-set-save-area">
+                <button
+                  type="button"
+                  id="cancelKPISetBtn"
+                  class="btn-secondary"
+                >
+                  <i class="fa-solid fa-xmark"></i>
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  id="saveKPISetBtn"
+                  class="btn-primary"
+                  disabled
+                >
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  <span id="saveKPISetText">Save KPI Set</span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- SAVED KPI SET LIST -->
+          <section class="dashboard-card saved-kpi-set-card">
+            <div class="card-header">
+              <div>
+                <h3>Saved KPI Set List</h3>
+                <p>Review and manage configured KPI targets</p>
+              </div>
+
+              <div class="record-count">
+                <span id="kpiSetRecordCount">0</span>
+                Records
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="kpi-set-saved-table">
+                <thead>
+                  <tr>
+                    <th>SL</th>
+                    <th>KPI Name</th>
+                    <th>UOM</th>
+                    <th>Weight</th>
+                    <th>Target</th>
+                    <th>Priority</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="savedKPISetList"></tbody>
+              </table>
+            </div>
+
+            <div id="emptySavedKPISet" class="empty-kpi-set-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-clipboard-check"></i>
+              </div>
+
+              <h4>No KPI Set Found</h4>
+
+              <p>Saved KPI set configurations will appear here.</p>
+            </div>
+          </section>
+        </main>
+
+        <footer>
+          <div id="footer"></div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div class="kpi-set-modal-overlay" id="kpiSetDeleteModal">
+      <div class="kpi-set-modal">
+        <div class="delete-modal-icon">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+
+        <h3>Delete KPI Set?</h3>
+
+        <p id="kpiSetDeleteText">
+          Are you sure you want to delete this KPI set row?
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelKPISetDelete">
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="delete-confirm-btn"
+            id="confirmKPISetDelete"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="kpi-set-toast" id="kpiSetToast">
+      <div class="toast-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <span id="kpiSetToastMessage"></span>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/kpiSet.js"></script>
+  </body>
+</html>

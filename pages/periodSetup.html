@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Period Setup | KPI Management System</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <link rel="stylesheet" href="../assets/css/periodSetup.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body data-base-path="..">
+    <div class="app-wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div id="leftMenu"></div>
+      </aside>
+
+      <!-- Main Wrapper -->
+      <div class="main-wrapper">
+        <!-- Top Menu -->
+        <header class="topbar">
+          <div id="topMenu"></div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="content">
+          <!-- Page Header -->
+          <div class="page-header">
+            <div>
+              <div class="page-title-with-icon">
+                <div class="page-title-icon">
+                  <i class="fa-regular fa-calendar"></i>
+                </div>
+
+                <div>
+                  <h1>Period Setup</h1>
+
+                  <p>Configure financial year and quarterly periods</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="header-date">
+              <i class="fa-regular fa-calendar"></i>
+
+              <span id="currentDate"></span>
+            </div>
+          </div>
+
+          <!-- Form Card -->
+          <section class="dashboard-card period-form-card">
+            <div class="card-header">
+              <div>
+                <h3>Financial Period Configuration</h3>
+
+                <p>
+                  Create a financial year and define its quarterly structure
+                </p>
+              </div>
+            </div>
+
+            <form id="periodSetupForm">
+              <div class="period-form-grid">
+                <!-- Financial Year -->
+                <div class="form-group">
+                  <label for="financialYear">
+                    Financial Year
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-regular fa-calendar-days"></i>
+
+                    <input
+                      type="text"
+                      id="financialYear"
+                      name="financialYear"
+                      placeholder="e.g. 2027"
+                      autocomplete="off"
+                      maxlength="20"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Quarter -->
+                <div class="form-group">
+                  <label for="quarterSet">
+                    Financial Year wise Quarter Set
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-solid fa-layer-group"></i>
+
+                    <select id="quarterSet" name="quarterSet" required>
+                      <option value="">Select Quarter</option>
+
+                      <option value="Q1">Q1</option>
+                      <option value="Q2">Q2</option>
+                      <option value="Q3">Q3</option>
+                      <option value="Q4">Q4</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- From Month -->
+                <div class="form-group">
+                  <label for="fromMonth">
+                    From Month
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <select id="fromMonth" name="fromMonth" required>
+                      <option value="">Select Month</option>
+
+                      <option value="January">January</option>
+                      <option value="February">February</option>
+                      <option value="March">March</option>
+                      <option value="April">April</option>
+                      <option value="May">May</option>
+                      <option value="June">June</option>
+                      <option value="July">July</option>
+                      <option value="August">August</option>
+                      <option value="September">September</option>
+                      <option value="October">October</option>
+                      <option value="November">November</option>
+                      <option value="December">December</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- To Month -->
+                <div class="form-group">
+                  <label for="toMonth">
+                    To Month
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-regular fa-calendar"></i>
+
+                    <select id="toMonth" name="toMonth" required>
+                      <option value="">Select Month</option>
+
+                      <option value="January">January</option>
+                      <option value="February">February</option>
+                      <option value="March">March</option>
+                      <option value="April">April</option>
+                      <option value="May">May</option>
+                      <option value="June">June</option>
+                      <option value="July">July</option>
+                      <option value="August">August</option>
+                      <option value="September">September</option>
+                      <option value="October">October</option>
+                      <option value="November">November</option>
+                      <option value="December">December</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Footer -->
+              <div class="form-actions">
+                <button type="reset" class="btn-secondary" id="clearPeriodBtn">
+                  <i class="fa-solid fa-rotate-left"></i>
+
+                  Clear
+                </button>
+
+                <button type="submit" class="btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i>
+
+                  Save Period
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Saved Periods -->
+          <section class="dashboard-card saved-period-card">
+            <div class="card-header">
+              <div>
+                <h3>Saved Financial Periods</h3>
+
+                <p>Previously configured financial periods</p>
+              </div>
+
+              <div class="record-count">
+                <span id="periodCount">0</span>
+
+                Records
+              </div>
+            </div>
+
+            <!-- Desktop Table -->
+            <div class="table-responsive">
+              <table class="period-table">
+                <thead>
+                  <tr>
+                    <th>SL</th>
+
+                    <th>Financial Year</th>
+
+                    <th>From Month</th>
+
+                    <th>To Month</th>
+
+                    <th>Quarter Set</th>
+
+                    <th>Saved Date</th>
+
+                    <th class="action-column">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="periodList"></tbody>
+              </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyPeriodState" class="empty-period-state">
+              <div class="empty-icon">
+                <i class="fa-regular fa-calendar-xmark"></i>
+              </div>
+
+              <h4>No Financial Period Found</h4>
+
+              <p>Create your first financial period using the form above.</p>
+            </div>
+          </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+          <div id="footer"></div>
+        </footer>
+      </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+
+    <script src="../assets/js/periodSetup.js"></script>
+  </body>
+</html>

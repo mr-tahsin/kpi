@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>KPI Entry | KPI Management System</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <link rel="stylesheet" href="../assets/css/kpiEntry.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="app-wrapper">
+      <aside class="sidebar" id="sidebar">
+        <div id="leftMenu"></div>
+      </aside>
+
+      <div class="main-wrapper">
+        <header class="topbar">
+          <div id="topMenu"></div>
+        </header>
+
+        <main class="content">
+          <!-- PAGE HEADER -->
+          <div class="page-header">
+            <div class="page-title-with-icon">
+              <div class="page-title-icon">
+                <i class="fa-solid fa-list-check"></i>
+              </div>
+
+              <div>
+                <h1>KPI Entry</h1>
+
+                <p>Define and configure KPIs for each organizational section</p>
+              </div>
+            </div>
+
+            <div class="header-date">
+              <i class="fa-regular fa-calendar"></i>
+
+              <span id="currentDate"></span>
+            </div>
+          </div>
+
+          <!-- KPI CONFIGURATION -->
+          <section class="dashboard-card kpi-config-card">
+            <div class="card-header">
+              <div>
+                <h3>KPI Configuration</h3>
+
+                <p>Select the applicable period and organizational structure</p>
+              </div>
+            </div>
+
+            <div class="kpi-basic-grid">
+              <!-- FINANCIAL YEAR -->
+              <div class="form-group">
+                <label for="financialYear">
+                  Financial Year
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-regular fa-calendar-days"></i>
+
+                  <select id="financialYear" required>
+                    <option value="">Select Financial Year</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- QUARTER -->
+              <div class="form-group">
+                <label for="quarter">
+                  Quarter
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-layer-group"></i>
+
+                  <select id="quarter" required>
+                    <option value="">Select Quarter</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- MONTH -->
+              <div class="form-group">
+                <label for="month"> Month </label>
+
+                <div class="input-wrapper readonly-wrapper">
+                  <i class="fa-regular fa-calendar"></i>
+
+                  <input
+                    type="text"
+                    id="month"
+                    readonly
+                    tabindex="-1"
+                    aria-readonly="true"
+                    autocomplete="off"
+                  />
+                </div>
+              </div>
+
+              <!-- UNIT -->
+              <div class="form-group">
+                <label for="unit">
+                  Unit / SBU
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-building"></i>
+
+                  <select id="unit" required>
+                    <option value="">Select Unit / SBU</option>
+
+                    <option value="Head Office">Head Office</option>
+
+                    <option value="MASCO Corporate">MASCO Corporate</option>
+
+                    <option value="Concept Knitting Ltd.">
+                      Concept Knitting Ltd.
+                    </option>
+
+                    <option value="MPL Wear">MPL Wear</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- DEPARTMENT -->
+              <div class="form-group">
+                <label for="department">
+                  Department
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-sitemap"></i>
+
+                  <select id="department" required>
+                    <option value="">Select Department</option>
+
+                    <option value="MIS">MIS</option>
+
+                    <option value="Accounts and Finance">
+                      Accounts and Finance
+                    </option>
+
+                    <option value="HR, Admin and Compliance">
+                      HR, Admin and Compliance
+                    </option>
+
+                    <option value="Supply Chain">Supply Chain</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- SECTION -->
+              <div class="form-group">
+                <label for="section">
+                  Section
+                  <span class="required">*</span>
+                </label>
+
+                <div class="input-wrapper">
+                  <i class="fa-solid fa-diagram-project"></i>
+
+                  <select id="section" required>
+                    <option value="">Select Section</option>
+
+                    <option value="System Development">
+                      System Development
+                    </option>
+
+                    <option value="Software">Software</option>
+
+                    <option value="Accounts">Accounts</option>
+
+                    <option value="VAT & Tax">VAT &amp; Tax</option>
+
+                    <option value="Finance">Finance</option>
+
+                    <option value="HR">HR</option>
+
+                    <option value="Admin">Admin</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADD KPI BUTTON -->
+            <div class="add-kpi-trigger">
+              <button type="button" id="addKpiBtn" class="btn-primary" disabled>
+                <i class="fa-solid fa-plus"></i>
+
+                Add KPI
+              </button>
+            </div>
+
+            <!-- KPI ROW AREA -->
+            <div id="kpiEntryArea" class="kpi-entry-area">
+              <div class="kpi-area-header">
+                <div>
+                  <h4>KPI List</h4>
+
+                  <p>Drag rows to rearrange priority</p>
+                </div>
+
+                <span id="kpiRowCount"> 0 KPI </span>
+              </div>
+
+              <div class="kpi-list-head">
+                <div class="kpi-head-name">KPI Name</div>
+
+                <div class="kpi-head-source">Data Source</div>
+
+                <div class="kpi-head-priority">Priority</div>
+
+                <div class="kpi-head-action">Action</div>
+              </div>
+
+              <div id="kpiRows" class="kpi-rows"></div>
+
+              <!-- SAVE AREA -->
+              <div class="kpi-save-area">
+                <button type="button" id="cancelKpiBtn" class="btn-secondary">
+                  <i class="fa-solid fa-xmark"></i>
+
+                  Cancel
+                </button>
+
+                <button type="button" id="saveKpiBtn" class="btn-primary">
+                  <i class="fa-solid fa-floppy-disk"></i>
+
+                  <span id="saveKpiText"> Save KPI </span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- SAVED KPI LIST -->
+          <section class="dashboard-card saved-kpi-card">
+            <div class="card-header">
+              <div>
+                <h3>Saved KPI List</h3>
+
+                <p>Review and manage saved KPI configurations</p>
+              </div>
+
+              <div class="record-count">
+                <span id="kpiRecordCount"> 0 </span>
+
+                Records
+              </div>
+            </div>
+
+            <!-- SEARCH -->
+            <div class="kpi-filter-area">
+              <div class="filter-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                  type="search"
+                  id="kpiSearch"
+                  placeholder="Search financial year, quarter, month, unit, department or section..."
+                  autocomplete="off"
+                />
+              </div>
+
+              <button
+                type="button"
+                id="clearSearchBtn"
+                class="clear-search-btn"
+                title="Clear Search"
+              >
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-responsive">
+              <table class="kpi-table">
+                <thead>
+                  <tr>
+                    <th>SL</th>
+
+                    <th>Financial Year</th>
+
+                    <th>Quarter</th>
+
+                    <th>Month</th>
+
+                    <th>Unit</th>
+
+                    <th>Department</th>
+
+                    <th>Section</th>
+
+                    <th>KPI Details</th>
+
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="savedKpiList"></tbody>
+              </table>
+            </div>
+
+            <!-- EMPTY STATE -->
+            <div id="emptyKpiState" class="empty-kpi-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-clipboard-list"></i>
+              </div>
+
+              <h4>No KPI Found</h4>
+
+              <p>Saved KPI configurations will appear here.</p>
+            </div>
+
+            <!-- NO SEARCH RESULT -->
+            <div id="noSearchResult" class="empty-kpi-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </div>
+
+              <h4>No Matching KPI</h4>
+
+              <p>Try changing your search keyword.</p>
+            </div>
+          </section>
+        </main>
+
+        <footer>
+          <div id="footer"></div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- KPI DETAILS MODAL -->
+    <div class="kpi-modal-overlay" id="kpiDetailsModal">
+      <div class="kpi-modal kpi-details-modal">
+        <div class="modal-header">
+          <div>
+            <div class="modal-title-icon">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+
+            <div>
+              <h3>KPI Details</h3>
+
+              <p id="modalSubtitle">KPI configuration details</p>
+            </div>
+          </div>
+
+          <button type="button" class="modal-close-btn" id="closeDetailsModal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="modal-meta" id="modalMeta"></div>
+
+        <div class="modal-table-wrapper">
+          <table class="modal-kpi-table">
+            <thead>
+              <tr>
+                <th>Priority</th>
+
+                <th>KPI Name</th>
+
+                <th>Data Source</th>
+              </tr>
+            </thead>
+
+            <tbody id="modalKpiList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div class="kpi-modal-overlay" id="kpiDeleteModal">
+      <div class="kpi-modal delete-modal">
+        <div class="delete-modal-icon">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+
+        <h3>Delete KPI?</h3>
+
+        <p id="deleteKpiText">
+          Are you sure you want to delete this KPI configuration?
+        </p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="cancelKpiDelete">
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            class="delete-confirm-btn"
+            id="confirmKpiDelete"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="kpi-toast" id="kpiToast">
+      <div class="toast-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <span id="kpiToastMessage"></span>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+
+    <script src="../assets/js/kpiEntry.js"></script>
+  </body>
+</html>

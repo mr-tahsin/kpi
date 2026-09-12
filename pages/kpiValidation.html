@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>KPI Validation | KPI Management System</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <link rel="stylesheet" href="../assets/css/kpiValidation.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="app-wrapper">
+      <aside class="sidebar" id="sidebar">
+        <div id="leftMenu"></div>
+      </aside>
+
+      <div class="main-wrapper">
+        <header class="topbar">
+          <div id="topMenu"></div>
+        </header>
+
+        <main class="content">
+          <!-- PAGE HEADER -->
+          <div class="page-header">
+            <div class="page-title-with-icon">
+              <div class="page-title-icon">
+                <i class="fa-solid fa-circle-check"></i>
+              </div>
+
+              <div>
+                <h1>KPI Validation</h1>
+                <p>Review and validate configured KPI targets</p>
+              </div>
+            </div>
+
+            <div class="header-date">
+              <i class="fa-regular fa-calendar"></i>
+              <span id="currentDate"></span>
+            </div>
+          </div>
+
+          <!-- SEARCH -->
+          <section class="dashboard-card kpi-validation-search-card">
+            <div class="card-header">
+              <div>
+                <h3>
+                  <i class="fa-solid fa-filter"></i>
+                  KPI Validation Search
+                </h3>
+
+                <p>Select the Financial Year, Quarter, Unit and Department</p>
+              </div>
+            </div>
+
+            <div class="kpi-validation-filter-grid">
+              <div class="form-group">
+                <label for="kpiValidationFinancialYear"> Financial Year </label>
+
+                <select id="kpiValidationFinancialYear">
+                  <option value="">Select Financial Year</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="kpiValidationQuarter"> Quarter </label>
+
+                <select id="kpiValidationQuarter">
+                  <option value="">Select Quarter</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="kpiValidationUnit"> Unit / SBU </label>
+
+                <select id="kpiValidationUnit">
+                  <option value="">Select Unit / SBU</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="kpiValidationDepartment"> Department </label>
+
+                <select id="kpiValidationDepartment">
+                  <option value="">Select Department</option>
+                </select>
+              </div>
+
+              <div class="filter-action">
+                <button
+                  type="button"
+                  id="kpiValidationSearchBtn"
+                  class="btn-primary"
+                >
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  Search
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- VALIDATION RESULT -->
+          <section
+            class="dashboard-card kpi-validation-result-card"
+            id="kpiValidationResultCard"
+          >
+            <div class="card-header">
+              <div>
+                <h3>
+                  <i class="fa-solid fa-list-check"></i>
+                  KPI Validation List
+                </h3>
+
+                <p>Review KPI configurations and validate KPI details</p>
+              </div>
+
+              <span class="record-count">
+                <span id="kpiValidationRecordCount">0</span>
+                Records
+              </span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="kpi-validation-table">
+                <thead>
+                  <tr>
+                    <th>SL</th>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th>Section</th>
+                    <th>Designation</th>
+                    <th>KPI Details</th>
+                  </tr>
+                </thead>
+
+                <tbody id="kpiValidationList"></tbody>
+              </table>
+            </div>
+
+            <div id="emptyKPIValidation" class="empty-kpi-validation-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-clipboard-check"></i>
+              </div>
+
+              <h4>No KPI Validation Records</h4>
+
+              <p>Select the required parameters and click Search.</p>
+            </div>
+          </section>
+        </main>
+
+        <footer>
+          <div id="footer"></div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- KPI DETAILS MODAL -->
+    <div class="kpi-validation-modal-overlay" id="kpiValidationModal">
+      <div class="kpi-validation-modal">
+        <div class="kpi-validation-modal-header">
+          <div>
+            <h3>
+              <i class="fa-solid fa-list-check"></i>
+              KPI Details
+            </h3>
+
+            <p>
+              Search Number:
+              <strong id="kpiValidationModalSearchNumber">—</strong>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            class="kpi-validation-modal-close"
+            id="closeKPIValidationModal"
+            title="Close"
+            aria-label="Close"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="kpi-validation-modal-body">
+          <div class="kpi-validation-modal-info">
+            <div>
+              <span>Financial Year</span>
+              <strong id="modalFinancialYear">—</strong>
+            </div>
+
+            <div>
+              <span>Quarter</span>
+              <strong id="modalQuarter">—</strong>
+            </div>
+
+            <div>
+              <span>Unit / SBU</span>
+              <strong id="modalUnit">—</strong>
+            </div>
+
+            <div>
+              <span>Department</span>
+              <strong id="modalDepartment">—</strong>
+            </div>
+
+            <div>
+              <span>Section</span>
+              <strong id="modalSection">—</strong>
+            </div>
+          </div>
+
+          <div class="kpi-validation-modal-table-wrapper">
+            <div id="kpiValidationModalRows"></div>
+          </div>
+        </div>
+
+        <div class="kpi-validation-modal-footer">
+          <div class="modal-weight-summary">
+            Total Weight:
+            <strong id="kpiValidationTotalWeight">0</strong>
+            / 100
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn-secondary"
+              id="cancelKPIValidationUpdate"
+            >
+              <i class="fa-solid fa-xmark"></i>
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="btn-primary"
+              id="updateKPIValidationBtn"
+            >
+              <i class="fa-solid fa-floppy-disk"></i>
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="kpi-validation-toast" id="kpiValidationToast">
+      <div class="toast-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <span id="kpiValidationToastMessage"></span>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/kpiValidation.js"></script>
+  </body>
+</html>

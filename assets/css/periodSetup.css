@@ -1,0 +1,766 @@
+/* =========================================================
+   PERIOD SETUP
+========================================================= */
+
+.page-title-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.page-title-icon {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 20px;
+}
+
+.page-title-with-icon h1 {
+  margin-bottom: 4px;
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.page-title-with-icon p {
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* =========================================================
+   FORM CARD
+========================================================= */
+
+.period-form-card {
+  margin-bottom: 20px;
+}
+
+.period-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.required {
+  color: var(--danger);
+  margin-left: 2px;
+}
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper > i {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+  width: 100%;
+  height: 44px;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  background: #fafbfd;
+  color: var(--text);
+
+  font-size: 13px;
+
+  outline: none;
+
+  padding: 0 12px 0 37px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.input-wrapper select {
+  cursor: pointer;
+}
+
+.input-wrapper input::placeholder {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus {
+  border-color: var(--primary);
+  background: var(--white);
+
+  box-shadow: 0 0 0 3px rgba(48, 80, 143, 0.08);
+}
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid #eef1f5;
+}
+
+.btn-primary,
+.btn-secondary {
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 18px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  border: 1px solid var(--primary);
+
+  background: var(--primary);
+
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+
+  border-color: var(--primary-dark);
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 4px 10px rgba(48, 80, 143, 0.18);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+
+  background: var(--white);
+
+  color: var(--text-light);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary);
+
+  color: var(--primary);
+
+  background: var(--primary-light);
+}
+
+/* =========================================================
+   SAVED PERIOD
+========================================================= */
+
+.saved-period-card {
+  overflow: hidden;
+}
+
+.record-count {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 7px 11px;
+
+  border-radius: 20px;
+
+  background: var(--primary-light);
+
+  color: var(--primary);
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.record-count span {
+  font-size: 14px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.period-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 760px;
+}
+
+.period-table th {
+  padding: 13px 12px;
+
+  background: #f7f9fc;
+
+  border-bottom: 1px solid var(--border);
+
+  color: var(--text-light);
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-align: left;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.4px;
+}
+
+.period-table td {
+  padding: 14px 12px;
+
+  border-bottom: 1px solid #eef1f5;
+
+  color: var(--text);
+
+  font-size: 13px;
+
+  vertical-align: middle;
+}
+
+.period-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.period-table tbody tr:hover {
+  background: #fafbfe;
+}
+
+.period-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================================
+   TABLE BADGES
+========================================================= */
+
+.quarter-badge {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 38px;
+
+  height: 27px;
+
+  padding: 0 9px;
+
+  border-radius: 6px;
+
+  background: var(--primary-light);
+
+  color: var(--primary);
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.year-badge {
+  font-weight: 600;
+
+  color: var(--primary);
+
+  font-size: 13px;
+}
+
+.saved-date {
+  color: var(--text-light);
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
+
+.delete-period-btn {
+  width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #f0d6d6;
+
+  border-radius: 7px;
+
+  background: #fff7f7;
+
+  color: var(--danger);
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  transition: all 0.2s ease;
+}
+
+.delete-period-btn:hover {
+  background: var(--danger);
+
+  border-color: var(--danger);
+
+  color: var(--white);
+
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-period-state {
+  display: none;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 45px 20px;
+
+  text-align: center;
+}
+
+.empty-icon {
+  width: 56px;
+  height: 56px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 13px;
+
+  border-radius: 50%;
+
+  background: var(--primary-light);
+
+  color: var(--primary);
+
+  font-size: 21px;
+}
+
+.empty-period-state h4 {
+  font-size: 15px;
+
+  margin-bottom: 6px;
+}
+
+.empty-period-state p {
+  color: var(--text-light);
+
+  font-size: 12px;
+}
+
+/* =========================================================
+   DELETE CONFIRMATION
+========================================================= */
+
+.period-confirm-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 3000;
+
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.42);
+
+  backdrop-filter: blur(3px);
+}
+
+.period-confirm-overlay.show {
+  display: flex;
+}
+
+.period-confirm-box {
+  width: 100%;
+
+  max-width: 390px;
+
+  padding: 28px;
+
+  border-radius: 14px;
+
+  background: var(--white);
+
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+
+  text-align: center;
+}
+
+.confirm-icon {
+  width: 52px;
+  height: 52px;
+
+  margin: 0 auto 13px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #fff1f1;
+
+  color: var(--danger);
+
+  font-size: 20px;
+}
+
+.period-confirm-box h3 {
+  font-size: 18px;
+
+  margin-bottom: 7px;
+}
+
+.period-confirm-box p {
+  color: var(--text-light);
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+.confirm-actions {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  margin-top: 22px;
+}
+
+.confirm-cancel,
+.confirm-delete {
+  height: 39px;
+
+  padding: 0 17px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.confirm-cancel {
+  border: 1px solid var(--border);
+
+  background: var(--white);
+
+  color: var(--text-light);
+}
+
+.confirm-delete {
+  border: 1px solid var(--danger);
+
+  background: var(--danger);
+
+  color: var(--white);
+}
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.period-toast {
+  position: fixed;
+
+  right: 22px;
+  bottom: 22px;
+
+  z-index: 4000;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 270px;
+
+  padding: 14px 16px;
+
+  border-radius: 9px;
+
+  background: var(--white);
+
+  border: 1px solid var(--border);
+
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.12);
+
+  color: var(--text);
+
+  font-size: 12px;
+
+  transform: translateY(20px);
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: all 0.25s ease;
+}
+
+.period-toast.show {
+  transform: translateY(0);
+
+  opacity: 1;
+}
+
+.toast-icon {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: #e8f7f0;
+
+  color: var(--success);
+
+  font-size: 12px;
+
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .period-form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* =========================================================
+   TABLET / MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+  .page-title-icon {
+    width: 40px;
+    height: 40px;
+
+    font-size: 18px;
+  }
+
+  .page-title-with-icon h1 {
+    font-size: 23px;
+  }
+
+  .page-title-with-icon p {
+    font-size: 12px;
+  }
+
+  .period-form-grid {
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .input-wrapper input,
+  .input-wrapper select {
+    height: 44px;
+
+    font-size: 13px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+
+    height: 42px;
+
+    font-size: 13px;
+  }
+
+  .card-header {
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+  .record-count {
+    flex-shrink: 0;
+
+    font-size: 11px;
+  }
+
+  .record-count span {
+    font-size: 13px;
+  }
+
+  .period-table {
+    min-width: 700px;
+  }
+
+  .period-table th {
+    font-size: 10px;
+  }
+
+  .period-table td {
+    font-size: 12px;
+  }
+
+  .period-toast {
+    left: 15px;
+
+    right: 15px;
+
+    bottom: 15px;
+
+    min-width: auto;
+
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+  .page-title-with-icon {
+    gap: 9px;
+  }
+
+  .page-title-icon {
+    width: 36px;
+    height: 36px;
+
+    font-size: 16px;
+  }
+
+  .page-title-with-icon h1 {
+    font-size: 21px;
+  }
+
+  .page-title-with-icon p {
+    font-size: 11px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+  }
+
+  .input-wrapper input,
+  .input-wrapper select {
+    font-size: 13px;
+  }
+
+  .period-table td {
+    font-size: 12px;
+  }
+
+  .period-table th {
+    font-size: 10px;
+  }
+
+  .quarter-badge {
+    font-size: 10px;
+  }
+
+  .period-confirm-box {
+    padding: 24px 20px;
+  }
+
+  .period-confirm-box h3 {
+    font-size: 17px;
+  }
+
+  .period-confirm-box p {
+    font-size: 12px;
+  }
+}

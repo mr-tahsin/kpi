@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>UOM Setup | KPI Management System</title>
+
+    <link rel="stylesheet" href="../assets/css/main.css" />
+
+    <link rel="stylesheet" href="../assets/css/uomSetup.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+  </head>
+
+  <body data-base-path="..">
+    <div class="app-wrapper">
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div id="leftMenu"></div>
+      </aside>
+
+      <!-- Main Wrapper -->
+      <div class="main-wrapper">
+        <!-- Top Menu -->
+        <header class="topbar">
+          <div id="topMenu"></div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+          <!-- Page Header -->
+          <div class="page-header">
+            <div class="page-title-with-icon">
+              <div class="page-title-icon">
+                <i class="fa-solid fa-ruler"></i>
+              </div>
+
+              <div>
+                <h1>UOM Setup</h1>
+
+                <p>
+                  Configure units of measurement and their applicable ranges
+                </p>
+              </div>
+            </div>
+
+            <div class="header-date">
+              <i class="fa-regular fa-calendar"></i>
+
+              <span id="currentDate"></span>
+            </div>
+          </div>
+
+          <!-- UOM Form -->
+          <section class="dashboard-card uom-form-card">
+            <div class="card-header">
+              <div>
+                <h3 id="uomFormTitle">UOM Configuration</h3>
+
+                <p id="uomFormDescription">Add a new unit of measurement</p>
+              </div>
+
+              <div class="editing-indicator" id="editingIndicator">
+                <i class="fa-solid fa-pen-to-square"></i>
+
+                Editing
+              </div>
+            </div>
+
+            <form id="uomForm">
+              <input type="hidden" id="uomId" />
+
+              <div class="uom-form-grid">
+                <!-- UOM Name -->
+                <div class="form-group">
+                  <label for="uomName">
+                    UOM Name
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-solid fa-ruler-horizontal"></i>
+
+                    <input
+                      type="text"
+                      id="uomName"
+                      placeholder="e.g. Percentage, Number, Average"
+                      maxlength="100"
+                      autocomplete="off"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Range From -->
+                <div class="form-group">
+                  <label for="rangeFrom">
+                    Range From
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-solid fa-arrow-down-1-9"></i>
+
+                    <input
+                      type="number"
+                      id="rangeFrom"
+                      placeholder="e.g. 0"
+                      step="any"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Range To -->
+                <div class="form-group">
+                  <label for="rangeTo">
+                    Range To
+
+                    <span class="required">*</span>
+                  </label>
+
+                  <div class="input-wrapper">
+                    <i class="fa-solid fa-arrow-up-1-9"></i>
+
+                    <input
+                      type="number"
+                      id="rangeTo"
+                      placeholder="e.g. 100"
+                      step="any"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Active -->
+                <div class="form-group active-group">
+                  <label> Status </label>
+
+                  <label class="active-switch" for="isActive">
+                    <input type="checkbox" id="isActive" checked />
+
+                    <span class="switch-slider"></span>
+
+                    <span class="switch-label"> Active </span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="form-actions">
+                <button type="button" class="btn-secondary" id="cancelEditBtn">
+                  <i class="fa-solid fa-xmark"></i>
+
+                  Cancel
+                </button>
+
+                <button type="reset" class="btn-secondary" id="clearUomBtn">
+                  <i class="fa-solid fa-rotate-left"></i>
+
+                  Clear
+                </button>
+
+                <button type="submit" class="btn-primary" id="saveUomBtn">
+                  <i class="fa-solid fa-floppy-disk"></i>
+
+                  <span id="saveUomText"> Save UOM </span>
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- UOM List -->
+          <section class="dashboard-card saved-uom-card">
+            <div class="card-header">
+              <div>
+                <h3>Saved UOM List</h3>
+
+                <p>Manage your configured units of measurement</p>
+              </div>
+
+              <div class="record-count">
+                <span id="uomCount">0</span>
+
+                Records
+              </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+              <table class="uom-table">
+                <thead>
+                  <tr>
+                    <th>SL</th>
+
+                    <th>UOM Name</th>
+
+                    <th>Range From</th>
+
+                    <th>Range To</th>
+
+                    <th>Status</th>
+
+                    <th>Saved Date</th>
+
+                    <th class="action-column">Action</th>
+                  </tr>
+                </thead>
+
+                <tbody id="uomList"></tbody>
+              </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyUomState" class="empty-uom-state">
+              <div class="empty-icon">
+                <i class="fa-solid fa-ruler-combined"></i>
+              </div>
+
+              <h4>No UOM Found</h4>
+
+              <p>Create your first unit of measurement using the form above.</p>
+            </div>
+          </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+          <div id="footer"></div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation -->
+    <div class="uom-modal-overlay" id="deleteModal">
+      <div class="uom-modal">
+        <div class="modal-icon delete-icon">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+
+        <h3>Delete UOM?</h3>
+
+        <p id="deleteModalText">Are you sure you want to delete this UOM?</p>
+
+        <div class="modal-actions">
+          <button type="button" class="modal-cancel" id="cancelDeleteBtn">
+            Cancel
+          </button>
+
+          <button type="button" class="modal-delete" id="confirmDeleteBtn">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="uom-toast" id="uomToast">
+      <div class="toast-icon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+
+      <span id="uomToastMessage"></span>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+
+    <script src="../assets/js/uomSetup.js"></script>
+  </body>
+</html>
