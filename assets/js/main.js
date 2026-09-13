@@ -163,8 +163,8 @@ const components = {
       <div class="user-avatar">TA</div>
 
       <div class="user-info">
-        <strong>Administrator</strong>
-        <span>Management</span>
+        <strong>Tahsin Faruque</strong>
+        <span>Prototype</span>
       </div>
 
       <i class="fa-solid fa-chevron-down user-arrow"></i>
