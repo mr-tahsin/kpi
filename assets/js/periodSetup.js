@@ -337,18 +337,18 @@ function renderPeriodList() {
                             </span>
                         </td>
 
+                          <td>
+                            <span class="quarter-badge">
+                                ${escapeHtml(period.quarterSet)}
+                            </span>
+                        </td>
+
                         <td>
                             ${escapeHtml(period.fromMonth)}
                         </td>
 
                         <td>
                             ${escapeHtml(period.toMonth)}
-                        </td>
-
-                        <td>
-                            <span class="quarter-badge">
-                                ${escapeHtml(period.quarterSet)}
-                            </span>
                         </td>
 
                         <td>

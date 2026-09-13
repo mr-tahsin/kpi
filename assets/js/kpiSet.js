@@ -11,23 +11,13 @@ document.addEventListener("DOMContentLoaded", function () {
 ========================================================= */
 
 const KPI_SET_STORAGE_KEY = "kpi_set_data";
-
 const KPI_STORAGE_KEY = "kpi_entry_data";
-
 const PERIOD_STORAGE_KEY = "kpi_period_setup";
-
-/*
-  Change this only if your UOM Setup page uses a different
-  localStorage key.
-*/
 const UOM_STORAGE_KEY = "kpi_uom_setup";
 
 let selectedKPIEntryRecordId = null;
-
 let editingKPISetId = null;
-
 let deletingKPISetId = null;
-
 let draggedKPISetId = null;
 
 /* =========================================================
@@ -36,43 +26,32 @@ let draggedKPISetId = null;
 
 function initializeKPISet() {
   loadSearchEngine();
-
   loadFinancialYears();
-
   bindKPISetEvents();
-
   hideSavedKPISetList();
-
   disableKPISetMonthEditing();
 
   document.getElementById("kpiSetConfigCard").classList.remove("show");
 }
+
 /* =========================================================
    EVENTS
 ========================================================= */
 
 function bindKPISetEvents() {
   const search = document.getElementById("kpiSetSearch");
-
   const clearSearch = document.getElementById("clearKPISetSearch");
-
   const loginButton = document.getElementById("kpiSetLoginBtn");
-
   const financialYear = document.getElementById("kpiSetFinancialYear");
-
   const quarter = document.getElementById("kpiSetQuarter");
-
   const saveButton = document.getElementById("saveKPISetBtn");
-
   const cancelButton = document.getElementById("cancelKPISetBtn");
 
   search.addEventListener("input", renderSearchEngine);
 
   clearSearch.addEventListener("click", function () {
     search.value = "";
-
     renderSearchEngine();
-
     search.focus();
   });
 
@@ -83,6 +62,12 @@ function bindKPISetEvents() {
         selectedKPIEntryRecordId = event.target.value;
 
         loginButton.disabled = false;
+
+        /*
+          Refresh available Financial Years for the newly
+          selected KPI Entry configuration.
+        */
+        loadFinancialYears();
       }
     });
 
@@ -202,6 +187,155 @@ function getUOMData() {
 }
 
 /* =========================================================
+   KPI ENTRY FIELD HELPERS
+========================================================= */
+
+function getEmployeeId(record) {
+  if (!record) {
+    return "";
+  }
+
+  return (
+    record.employeeId ??
+    record.employeeID ??
+    record.empId ??
+    record.employeeCode ??
+    record.employee ??
+    ""
+  );
+}
+
+function getFinancialYear(record) {
+  if (!record) {
+    return "";
+  }
+
+  return record.financialYear ?? record.finYear ?? record.year ?? "";
+}
+
+function getQuarter(record) {
+  if (!record) {
+    return "";
+  }
+
+  return (
+    record.quarter ??
+    record.quarterSet ??
+    record.financialYearWiseQuarterSet ??
+    ""
+  );
+}
+
+/* =========================================================
+   CURRENT KPI ENTRY CONFIGURATION
+========================================================= */
+
+function getCurrentKPIEntryRecord() {
+  if (!selectedKPIEntryRecordId) {
+    return null;
+  }
+
+  const year = String(
+    document.getElementById("kpiSetFinancialYear")?.value || "",
+  ).trim();
+
+  const quarter = normalizeQuarter(
+    document.getElementById("kpiSetQuarter")?.value || "",
+  );
+
+  const entryRecords = getStoredKPIEntryRecords();
+
+  const selectedRecord = entryRecords.find(function (record) {
+    return String(record.id) === String(selectedKPIEntryRecordId);
+  });
+
+  if (!selectedRecord) {
+    return null;
+  }
+
+  const selectedEmployeeId = String(getEmployeeId(selectedRecord)).trim();
+
+  const selectedDepartment = String(selectedRecord.department ?? "").trim();
+
+  const selectedSection = String(selectedRecord.section ?? "").trim();
+
+  /*
+    Recommended KPIs must come from the KPI Entry
+    configuration matching:
+
+    Employee ID
+    Financial Year
+    Quarter
+    Department
+    Section
+  */
+
+  const matchingRecord = entryRecords.find(function (record) {
+    const recordEmployeeId = String(getEmployeeId(record)).trim();
+
+    const recordYear = String(getFinancialYear(record)).trim();
+
+    const recordQuarter = normalizeQuarter(getQuarter(record));
+
+    const recordDepartment = String(record.department ?? "").trim();
+
+    const recordSection = String(record.section ?? "").trim();
+
+    return (
+      recordEmployeeId === selectedEmployeeId &&
+      recordYear === year &&
+      recordQuarter === quarter &&
+      recordDepartment === selectedDepartment &&
+      recordSection === selectedSection
+    );
+  });
+
+  return matchingRecord || null;
+}
+
+/* =========================================================
+   RECOMMENDED KPI OPTIONS
+========================================================= */
+
+function getRecommendedKPIOptions() {
+  const record = getCurrentKPIEntryRecord();
+
+  if (!record || !Array.isArray(record.kpis)) {
+    return [];
+  }
+
+  const seen = new Set();
+
+  return record.kpis
+    .slice()
+    .sort(function (a, b) {
+      return Number(a.priority || 0) - Number(b.priority || 0);
+    })
+    .reduce(function (list, kpi) {
+      const name = String(kpi.kpiName || "").trim();
+
+      if (!name) {
+        return list;
+      }
+
+      const key = name.toLowerCase();
+
+      if (seen.has(key)) {
+        return list;
+      }
+
+      seen.add(key);
+
+      list.push({
+        id: kpi.id || null,
+        kpiName: name,
+      });
+
+      return list;
+    }, []);
+}
+
+/* =========================================================
    SEARCH NUMBER
 ========================================================= */
 
@@ -211,7 +345,7 @@ function generateSearchNumber(existingNumbers) {
   do {
     const digitLength = Math.floor(Math.random() * 4) + 3;
 
-    let firstDigit = Math.floor(Math.random() * 9) + 1;
+    const firstDigit = Math.floor(Math.random() * 9) + 1;
 
     let remaining = "";
 
@@ -239,11 +373,6 @@ function getOrCreateSearchNumber(record) {
   });
 
   const newNumber = generateSearchNumber(usedNumbers);
-
-  /*
-    Persist the generated number directly into the KPI Entry
-    record so the same number remains stable on future visits.
-  */
 
   const records = getStoredKPIEntryRecords();
 
@@ -307,6 +436,7 @@ function renderSearchEngine() {
 
   const filtered = records.filter(function (record) {
     const searchText = [
+      getEmployeeId(record),
       record.searchNumber,
       record.unit,
       record.department,
@@ -332,7 +462,8 @@ function renderSearchEngine() {
     .map(function (record) {
       const searchNumber = getOrCreateSearchNumber(record);
 
-      const checked = selectedKPIEntryRecordId === record.id ? "checked" : "";
+      const checked =
+        String(selectedKPIEntryRecordId) === String(record.id) ? "checked" : "";
 
       return `
         <tr>
@@ -341,7 +472,7 @@ function renderSearchEngine() {
               type="radio"
               name="kpiSetSearchSelection"
               class="kpi-set-radio"
-              value="${escapeKPISetHtml(record.id)}"
+              value="${escapeKPISetAttribute(record.id)}"
               ${checked}
             />
           </td>
@@ -354,19 +485,19 @@ function renderSearchEngine() {
 
           <td>
             <span class="org-value">
-              ${escapeKPISetHtml(record.unit)}
+              ${escapeKPISetHtml(record.unit || "—")}
             </span>
           </td>
 
           <td>
             <span class="org-value">
-              ${escapeKPISetHtml(record.department)}
+              ${escapeKPISetHtml(record.department || "—")}
             </span>
           </td>
 
           <td>
             <span class="org-value section-value">
-              ${escapeKPISetHtml(record.section)}
+              ${escapeKPISetHtml(record.section || "—")}
             </span>
           </td>
         </tr>
@@ -408,10 +539,6 @@ function loginToKPISet() {
 
   loadFinancialYears();
 
-  /*
-    Show only the Saved KPI Set List belonging
-    to the selected Search Number.
-  */
   renderSavedKPISetList();
 
   document.getElementById("kpiSetConfigCard").classList.add("show");
@@ -456,29 +583,11 @@ function loadFinancialYears() {
     <option value="">Select Financial Year</option>
   `;
 
-  /*
-    ============================================================
-    IMPORTANT:
-    Financial Year must come from KPI Entry data, not Period Setup.
-
-    Only KPI Entry records matching the currently selected:
-      Unit
-      Department
-      Section
-
-    will be considered.
-    ============================================================
-  */
-
   const entryRecords = getStoredKPIEntryRecords();
 
   if (!selectedKPIEntryRecordId || !entryRecords.length) {
     return;
   }
-
-  /*
-    Find the currently selected Search Engine configuration.
-  */
 
   const selectedRecord = entryRecords.find(function (record) {
     return String(record.id) === String(selectedKPIEntryRecordId);
@@ -488,40 +597,33 @@ function loadFinancialYears() {
     return;
   }
 
-  /*
-    Get Financial Years only from KPI Entry records having
-    the exact same Unit + Department + Section.
-  */
+  const selectedEmployeeId = String(getEmployeeId(selectedRecord)).trim();
+
+  const selectedDepartment = String(selectedRecord.department ?? "").trim();
+
+  const selectedSection = String(selectedRecord.section ?? "").trim();
 
   const years = [];
 
   entryRecords.forEach(function (record) {
-    const sameUnit =
-      String(record.unit ?? "").trim() ===
-      String(selectedRecord.unit ?? "").trim();
+    const sameEmployee =
+      String(getEmployeeId(record)).trim() === selectedEmployeeId;
 
     const sameDepartment =
-      String(record.department ?? "").trim() ===
-      String(selectedRecord.department ?? "").trim();
+      String(record.department ?? "").trim() === selectedDepartment;
 
-    const sameSection =
-      String(record.section ?? "").trim() ===
-      String(selectedRecord.section ?? "").trim();
+    const sameSection = String(record.section ?? "").trim() === selectedSection;
 
-    if (!sameUnit || !sameDepartment || !sameSection) {
+    if (!sameEmployee || !sameDepartment || !sameSection) {
       return;
     }
 
-    const year = record.financialYear ?? record.finYear ?? record.year ?? "";
+    const year = getFinancialYear(record);
 
     if (String(year).trim() !== "" && !years.includes(String(year).trim())) {
       years.push(String(year).trim());
     }
   });
-
-  /*
-    Sort Financial Years descending.
-  */
 
   years.sort(function (a, b) {
     return b.localeCompare(a, undefined, {
@@ -529,11 +631,6 @@ function loadFinancialYears() {
       sensitivity: "base",
     });
   });
-
-  /*
-    Populate only the Financial Years belonging to the
-    selected Unit + Department + Section.
-  */
 
   years.forEach(function (year) {
     const option = document.createElement("option");
@@ -544,10 +641,6 @@ function loadFinancialYears() {
     select.appendChild(option);
   });
 
-  /*
-    Preserve the previous selection if it still exists.
-  */
-
   if (years.includes(String(currentValue))) {
     select.value = currentValue;
   }
@@ -556,6 +649,7 @@ function loadFinancialYears() {
 /* =========================================================
    FINANCIAL YEAR CHANGE
 ========================================================= */
+
 function handleKPISetFinancialYearChange() {
   const year = document.getElementById("kpiSetFinancialYear").value;
 
@@ -571,6 +665,7 @@ function handleKPISetFinancialYearChange() {
 
   if (!year || !selectedKPIEntryRecordId) {
     updateKPISetSaveButton();
+
     return;
   }
 
@@ -582,38 +677,35 @@ function handleKPISetFinancialYearChange() {
 
   if (!selectedRecord) {
     updateKPISetSaveButton();
+
     return;
   }
+
+  const selectedEmployeeId = String(getEmployeeId(selectedRecord)).trim();
+
+  const selectedDepartment = String(selectedRecord.department ?? "").trim();
+
+  const selectedSection = String(selectedRecord.section ?? "").trim();
 
   const quarters = [];
 
   entryRecords.forEach(function (record) {
     const sameYear =
-      String(
-        record.financialYear ?? record.finYear ?? record.year ?? "",
-      ).trim() === String(year).trim();
+      String(getFinancialYear(record)).trim() === String(year).trim();
 
-    const sameUnit =
-      String(record.unit ?? "").trim() ===
-      String(selectedRecord.unit ?? "").trim();
+    const sameEmployee =
+      String(getEmployeeId(record)).trim() === selectedEmployeeId;
 
     const sameDepartment =
-      String(record.department ?? "").trim() ===
-      String(selectedRecord.department ?? "").trim();
+      String(record.department ?? "").trim() === selectedDepartment;
 
-    const sameSection =
-      String(record.section ?? "").trim() ===
-      String(selectedRecord.section ?? "").trim();
+    const sameSection = String(record.section ?? "").trim() === selectedSection;
 
-    if (!sameYear || !sameUnit || !sameDepartment || !sameSection) {
+    if (!sameYear || !sameEmployee || !sameDepartment || !sameSection) {
       return;
     }
 
-    const quarterName =
-      record.quarter ??
-      record.quarterSet ??
-      record.financialYearWiseQuarterSet ??
-      "";
+    const quarterName = getQuarter(record);
 
     if (!String(quarterName).trim()) {
       return;
@@ -671,19 +763,13 @@ function handleKPISetQuarterChange() {
   const periods = getPeriodData();
 
   const matchingPeriods = periods.filter(function (period) {
-    const periodYear = String(
-      period.financialYear ?? period.finYear ?? period.year ?? "",
-    );
+    const periodYear = String(getFinancialYear(period)).trim();
 
-    const periodQuarter = normalizeQuarter(
-      period.quarter ??
-        period.quarterSet ??
-        period.financialYearWiseQuarterSet ??
-        "",
-    );
+    const periodQuarter = normalizeQuarter(getQuarter(period));
 
     return (
-      periodYear === String(year) && periodQuarter === normalizeQuarter(quarter)
+      periodYear === String(year).trim() &&
+      periodQuarter === normalizeQuarter(quarter)
     );
   });
 
@@ -703,11 +789,7 @@ function handleKPISetQuarterChange() {
     month.value = buildMonthFromQuarter(quarter);
   }
 
-  const entryRecords = getStoredKPIEntryRecords();
-
-  const entryRecord = entryRecords.find(function (record) {
-    return String(record.id) === String(selectedKPIEntryRecordId);
-  });
+  const entryRecord = getCurrentKPIEntryRecord();
 
   if (entryRecord) {
     const existingSet = findKPISetConfiguration(year, quarter, entryRecord);
@@ -719,6 +801,8 @@ function handleKPISetQuarterChange() {
 
       loadKPIsForSelectedConfiguration();
     }
+  } else {
+    loadKPIsForSelectedConfiguration();
   }
 
   updateKPISetSaveButton();
@@ -733,44 +817,11 @@ function loadKPIsForSelectedConfiguration() {
     return;
   }
 
-  const entryRecords = getStoredKPIEntryRecords();
-
-  const selectedRecord = entryRecords.find(function (record) {
-    return String(record.id) === String(selectedKPIEntryRecordId);
-  });
-
-  if (!selectedRecord) {
-    showKPISetToast(
-      "The selected KPI Entry configuration could not be found.",
-      "error",
-    );
-
-    return;
-  }
-
-  const year = document.getElementById("kpiSetFinancialYear").value;
-
-  const quarter = document.getElementById("kpiSetQuarter").value;
-
-  const matchingRecord = entryRecords.find(function (record) {
-    return (
-      record.financialYear === year &&
-      normalizeQuarter(record.quarter) === normalizeQuarter(quarter) &&
-      String(record.unit) === String(selectedRecord.unit) &&
-      String(record.department) === String(selectedRecord.department) &&
-      String(record.section) === String(selectedRecord.section)
-    );
-  });
-
-  /*
-    Because KPI Entry enforces a unique FY + Quarter + Unit +
-    Department + Section combination, this should identify
-    exactly one record.
-  */
+  const matchingRecord = getCurrentKPIEntryRecord();
 
   if (!matchingRecord) {
     showKPISetToast(
-      "No KPI Entry configuration exists for the selected Financial Year and Quarter.",
+      "No KPI Entry configuration exists for the selected Employee ID, Financial Year, Quarter, Department and Section.",
       "error",
     );
 
@@ -779,30 +830,34 @@ function loadKPIsForSelectedConfiguration() {
 
   clearKPISetRows();
 
-  if (Array.isArray(matchingRecord.kpis) && matchingRecord.kpis.length) {
-    matchingRecord.kpis
-      .slice()
-      .sort(function (a, b) {
-        return Number(a.priority || 0) - Number(b.priority || 0);
-      })
-      .forEach(function (kpi) {
-        addKPISetRow({
-          kpiName: kpi.kpiName || "",
-          priority: kpi.priority,
-          sourceKPIId: kpi.id || null,
-          isLoadedFromKPIEntry: true,
-        });
-      });
-  } else {
-    showKPISetToast(
-      "No KPI rows are available in the selected KPI Entry configuration.",
-      "error",
-    );
-  }
+  /*
+    IMPORTANT:
+
+    KPI Target Configuration starts with ONE row only.
+
+    The user can:
+      - type KPI Name manually
+      - select a Recommended KPI
+      - add additional rows using +
+  */
+
+  addKPISetRow({
+    id: null,
+    kpiName: "",
+    uom: "",
+    weight: "",
+    target: "",
+    remarks: "",
+    sourceKPIId: null,
+    kpiSelectedFromRecommendation: false,
+    kpiEntryOptions: getRecommendedKPIOptions(),
+  });
 
   updateKPISetOrder();
 
   document.getElementById("kpiSetEntryArea").classList.add("show");
+
+  updateKPISetSaveButton();
 }
 
 /* =========================================================
@@ -838,61 +893,56 @@ function loadExistingKPISet(setRecord, entryRecord) {
 
   container.innerHTML = "";
 
-  const sourceKPIs = Array.isArray(entryRecord.kpis)
-    ? entryRecord.kpis.slice().sort(function (a, b) {
-        return Number(a.priority || 0) - Number(b.priority || 0);
-      })
-    : [];
-
   const savedRows = Array.isArray(setRecord.rows) ? setRecord.rows : [];
 
+  const recommendedKPIs = getRecommendedKPIOptions();
+
   /*
-    Load KPI Entry rows.
+    Load exactly what was saved.
+
+    The saved state determines whether the
+    KPI Name is locked or editable.
   */
 
-  sourceKPIs.forEach(function (kpi, index) {
-    const savedRow = savedRows.find(function (row) {
-      return (
-        row.isLoadedFromKPIEntry === true &&
-        (String(row.sourceKPIId || "") === String(kpi.id || "") ||
-          (!row.sourceKPIId &&
-            String(row.kpiName || "") === String(kpi.kpiName || "")))
-      );
-    });
-
+  savedRows.forEach(function (row) {
     addKPISetRow({
-      id: savedRow?.id || null,
-      kpiName: kpi.kpiName || "",
-      uom: savedRow?.uom || "",
-      weight: savedRow?.weight ?? "",
-      target: savedRow?.target ?? "",
-      remarks: savedRow?.remarks || "",
-      sourceKPIId: kpi.id || null,
-      isLoadedFromKPIEntry: true,
-      priority: index + 1,
+      id: row.id || null,
+
+      kpiName: row.kpiName || "",
+
+      uom: row.uom || "",
+
+      weight: row.weight ?? "",
+
+      target: row.target ?? "",
+
+      remarks: row.remarks || "",
+
+      sourceKPIId: row.sourceKPIId || null,
+
+      kpiSelectedFromRecommendation: row.kpiSelectedFromRecommendation === true,
+
+      kpiEntryOptions: recommendedKPIs,
     });
   });
 
   /*
-    Load manually-created KPI Target rows.
+    Safety fallback.
   */
 
-  savedRows
-    .filter(function (row) {
-      return row.isLoadedFromKPIEntry !== true;
-    })
-    .forEach(function (row) {
-      addKPISetRow({
-        id: row.id || null,
-        kpiName: row.kpiName || "",
-        uom: row.uom || "",
-        weight: row.weight ?? "",
-        target: row.target ?? "",
-        remarks: row.remarks || "",
-        sourceKPIId: null,
-        isLoadedFromKPIEntry: false,
-      });
+  if (!savedRows.length) {
+    addKPISetRow({
+      id: null,
+      kpiName: "",
+      uom: "",
+      weight: "",
+      target: "",
+      remarks: "",
+      sourceKPIId: null,
+      kpiSelectedFromRecommendation: false,
+      kpiEntryOptions: recommendedKPIs,
     });
+  }
 
   updateKPISetOrder();
 
@@ -917,7 +967,13 @@ function addKPISetRow(rowData = {}) {
       "-" +
       Math.random().toString(36).substring(2, 8);
 
-  const isLoaded = rowData.isLoadedFromKPIEntry === true;
+  const kpiOptions = Array.isArray(rowData.kpiEntryOptions)
+    ? rowData.kpiEntryOptions
+    : getRecommendedKPIOptions();
+
+  const selectedFromRecommendation =
+    rowData.kpiSelectedFromRecommendation === true ||
+    rowData.kpiSelected === true;
 
   const row = document.createElement("div");
 
@@ -925,29 +981,54 @@ function addKPISetRow(rowData = {}) {
 
   row.dataset.rowId = rowId;
 
-  row.dataset.loadedFromEntry = isLoaded ? "true" : "false";
   row.dataset.sourceKpiId = rowData.sourceKPIId || "";
+
+  row.dataset.kpiSelected = selectedFromRecommendation ? "true" : "false";
 
   row.draggable = true;
 
-  const kpiNameHtml = isLoaded
-    ? `
-      <span class="kpi-name-text">
-        ${escapeKPISetHtml(rowData.kpiName || "")}
-      </span>
-    `
-    : `
-      <input
-        type="text"
-        class="kpi-set-input kpi-name-input"
-        placeholder="Enter KPI Name..."
-        autocomplete="off"
-        value="${escapeKPISetAttribute(rowData.kpiName || "")}"
-      />
+  const selectedKPIName = String(rowData.kpiName || "").trim();
+
+  const selectedRecommendedKPI = selectedFromRecommendation
+    ? kpiOptions.find(function (kpi) {
+        return (
+          String(kpi.kpiName || "")
+            .trim()
+            .toLowerCase() === selectedKPIName.toLowerCase()
+        );
+      })
+    : null;
+
+  let recommendedOptions = `
+    <option value="">Select Recommended KPI</option>
+  `;
+
+  kpiOptions.forEach(function (kpi) {
+    const kpiName = String(kpi.kpiName || "").trim();
+
+    if (!kpiName) {
+      return;
+    }
+
+    const selected =
+      selectedRecommendedKPI &&
+      String(selectedRecommendedKPI.kpiName).trim() === kpiName
+        ? "selected"
+        : "";
+
+    recommendedOptions += `
+      <option
+        value="${escapeKPISetAttribute(kpiName)}"
+        ${selected}
+      >
+        ${escapeKPISetHtml(kpiName)}
+      </option>
     `;
+  });
 
   row.innerHTML = `
     <div class="kpi-set-cell kpi-name-cell">
+
       <div
         class="kpi-drag-handle"
         title="Drag to change priority"
@@ -955,7 +1036,28 @@ function addKPISetRow(rowData = {}) {
         <i class="fa-solid fa-grip-vertical"></i>
       </div>
 
-      ${kpiNameHtml}
+      <div class="kpi-name-controls">
+
+        <input
+          type="text"
+          class="kpi-set-input kpi-name-input"
+          placeholder="Type KPI Name..."
+          autocomplete="off"
+          value="${escapeKPISetAttribute(selectedKPIName)}"
+          ${selectedFromRecommendation ? "readonly" : ""}
+        />
+
+        <label class="kpi-recommended-label">
+          Recommended KPIs
+        </label>
+
+        <select
+          class="kpi-set-select kpi-recommended-select"
+        >
+          ${recommendedOptions}
+        </select>
+
+      </div>
     </div>
 
     <div class="kpi-set-cell">
@@ -1013,14 +1115,14 @@ function addKPISetRow(rowData = {}) {
           <i class="fa-solid fa-plus"></i>
         </button>
 
-            <button
-        type="button"
-        class="kpi-row-action kpi-delete-row-btn"
-        title="Delete row"
-        aria-label="Delete row"
-      >
-        <i class="fa-solid fa-minus"></i>
-      </button>
+        <button
+          type="button"
+          class="kpi-row-action kpi-delete-row-btn"
+          title="Delete row"
+          aria-label="Delete row"
+        >
+          <i class="fa-solid fa-minus"></i>
+        </button>
 
       </div>
     </div>
@@ -1028,9 +1130,94 @@ function addKPISetRow(rowData = {}) {
 
   container.appendChild(row);
 
-  if (isLoaded) {
-    protectKPISetName(row);
+  const nameInput = row.querySelector(".kpi-name-input");
+
+  const recommendedSelect = row.querySelector(".kpi-recommended-select");
+
+  /*
+    Recommended KPI selection:
+
+    Selecting a KPI from the dropdown:
+      1. Copies the KPI Name into the input.
+      2. Locks the input.
+      3. Stores the source KPI ID.
+  */
+
+  recommendedSelect.addEventListener("change", function () {
+    const selectedValue = recommendedSelect.value.trim();
+
+    if (!selectedValue) {
+      nameInput.readOnly = false;
+
+      nameInput.classList.remove("kpi-name-locked");
+
+      row.dataset.sourceKpiId = "";
+
+      row.dataset.kpiSelected = "false";
+
+      updateKPISetSaveButton();
+
+      return;
+    }
+
+    const matchedKPI = kpiOptions.find(function (kpi) {
+      return (
+        String(kpi.kpiName || "")
+          .trim()
+          .toLowerCase() === selectedValue.toLowerCase()
+      );
+    });
+
+    if (!matchedKPI) {
+      return;
+    }
+
+    nameInput.value = matchedKPI.kpiName;
+
+    nameInput.readOnly = true;
+
+    nameInput.classList.add("kpi-name-locked");
+
+    row.dataset.sourceKpiId = matchedKPI.id || "";
+
+    row.dataset.kpiSelected = "true";
+
+    updateKPISetSaveButton();
+  });
+
+  /*
+    Manual typing:
+
+    If the user types manually, the input stays editable
+    and the Recommended KPI selection is cleared.
+  */
+
+  nameInput.addEventListener("input", function () {
+    if (!nameInput.readOnly) {
+      recommendedSelect.value = "";
+
+      row.dataset.sourceKpiId = "";
+
+      row.dataset.kpiSelected = "false";
+    }
+
+    updateKPISetSaveButton();
+  });
+
+  /*
+    If a saved recommended KPI was loaded,
+    keep the input locked.
+  */
+
+  if (selectedFromRecommendation) {
+    nameInput.readOnly = true;
+
+    nameInput.classList.add("kpi-name-locked");
   }
+
+  /*
+    + button
+  */
 
   row.querySelector(".kpi-add-row-btn").addEventListener("click", function () {
     addKPISetRow({
@@ -1041,7 +1228,8 @@ function addKPISetRow(rowData = {}) {
       target: "",
       remarks: "",
       sourceKPIId: null,
-      isLoadedFromKPIEntry: false,
+      kpiSelectedFromRecommendation: false,
+      kpiEntryOptions: getRecommendedKPIOptions(),
     });
 
     updateKPISetOrder();
@@ -1052,13 +1240,17 @@ function addKPISetRow(rowData = {}) {
     const lastRow = rows[rows.length - 1];
 
     if (lastRow) {
-      const nameField = lastRow.querySelector(".kpi-name-input");
+      const lastNameInput = lastRow.querySelector(".kpi-name-input");
 
-      if (nameField) {
-        nameField.focus();
+      if (lastNameInput) {
+        lastNameInput.focus();
       }
     }
   });
+
+  /*
+    - button
+  */
 
   row
     .querySelector(".kpi-delete-row-btn")
@@ -1116,8 +1308,7 @@ function buildUOMOptions(selectedValue) {
   });
 
   /*
-    Preserve an already-saved UOM even if that UOM
-    has subsequently been made inactive or removed.
+    Preserve saved UOM if it is no longer active.
   */
 
   if (
@@ -1144,6 +1335,18 @@ function buildUOMOptions(selectedValue) {
 ========================================================= */
 
 function deleteKPISetRow(row) {
+  const rows = document.querySelectorAll("#kpiSetRows .kpi-set-row");
+
+  /*
+    Final row cannot be deleted.
+  */
+
+  if (rows.length <= 1) {
+    showKPISetToast("At least one KPI row must remain.", "error");
+
+    return;
+  }
+
   row.remove();
 
   updateKPISetOrder();
@@ -1173,6 +1376,29 @@ function updateKPISetOrder() {
   if (count) {
     count.textContent = `${rows.length} KPI${rows.length === 1 ? "" : "s"}`;
   }
+
+  /*
+    Disable the delete button when only
+    one row remains.
+  */
+
+  rows.forEach(function (row) {
+    const deleteButton = row.querySelector(".kpi-delete-row-btn");
+
+    if (!deleteButton) {
+      return;
+    }
+
+    if (rows.length <= 1) {
+      deleteButton.disabled = true;
+      deleteButton.classList.add("disabled");
+      deleteButton.title = "At least one KPI row must remain";
+    } else {
+      deleteButton.disabled = false;
+      deleteButton.classList.remove("disabled");
+      deleteButton.title = "Delete row";
+    }
+  });
 }
 
 /* =========================================================
@@ -1279,8 +1505,6 @@ function collectKPISetRows() {
   return rows.map(function (row, index) {
     const nameInput = row.querySelector(".kpi-name-input");
 
-    const nameText = row.querySelector(".kpi-name-text");
-
     return {
       id:
         row.dataset.rowId ||
@@ -1288,11 +1512,7 @@ function collectKPISetRows() {
           "-" +
           Math.random().toString(36).substring(2, 8),
 
-      kpiName: nameInput
-        ? nameInput.value.trim()
-        : nameText
-          ? nameText.textContent.trim()
-          : "",
+      kpiName: nameInput?.value.trim() || "",
 
       uom: row.querySelector(".kpi-uom-select")?.value || "",
 
@@ -1304,7 +1524,16 @@ function collectKPISetRows() {
 
       remarks: row.querySelector(".kpi-remarks-input")?.value.trim() || "",
 
-      isLoadedFromKPIEntry: row.dataset.loadedFromEntry === "true",
+      /*
+        Keep the exact KPI Name state.
+
+        true  = selected from Recommended KPIs
+        false = manually typed
+      */
+
+      kpiSelectedFromRecommendation: row.dataset.kpiSelected === "true",
+
+      sourceKPIId: row.dataset.sourceKpiId || null,
     };
   });
 }
@@ -1362,11 +1591,6 @@ function validateKPISetRows(rows) {
     totalWeight += Number(row.weight);
   }
 
-  /*
-    Weight validation:
-    A KPI set should not exceed 100 total weight.
-  */
-
   if (totalWeight > 100) {
     showKPISetToast(
       `Total KPI weight cannot exceed 100. Current total: ${totalWeight}.`,
@@ -1423,17 +1647,19 @@ function saveKPISetConfiguration() {
   const records = getStoredKPISetRecords();
 
   const basicData = {
+    employeeId: getEmployeeId(entryRecord),
+
     financialYear: year,
 
     quarter: quarter,
 
     month: month,
 
-    unit: entryRecord.unit,
+    unit: entryRecord.unit ?? entryRecord.sbu ?? entryRecord.unitSBU ?? "",
 
-    department: entryRecord.department,
+    department: entryRecord.department ?? "",
 
-    section: entryRecord.section,
+    section: entryRecord.section ?? "",
 
     searchNumber: getOrCreateSearchNumber(entryRecord),
 
@@ -1442,11 +1668,9 @@ function saveKPISetConfiguration() {
     rows: rows,
   };
 
-  /*
-    |--------------------------------------------------------------------------
-    | UPDATE
-    |--------------------------------------------------------------------------
-    */
+  /* =======================================================
+     UPDATE
+  ======================================================= */
 
   if (editingKPISetId) {
     const index = records.findIndex(function (record) {
@@ -1476,11 +1700,9 @@ function saveKPISetConfiguration() {
     return;
   }
 
-  /*
-    |--------------------------------------------------------------------------
-    | PREVENT DUPLICATE SET
-    |--------------------------------------------------------------------------
-    */
+  /* =======================================================
+     PREVENT DUPLICATE SET
+  ======================================================= */
 
   const currentSearchNumber = String(
     getOrCreateSearchNumber(entryRecord),
@@ -1497,18 +1719,16 @@ function saveKPISetConfiguration() {
 
   if (duplicate) {
     showKPISetToast(
-      "A KPI Set already exists for this Financial Year, Quarter, Unit, Department and Section.",
+      "A KPI Set already exists for this Financial Year, Quarter, Employee ID, Department and Section.",
       "error",
     );
 
     return;
   }
 
-  /*
-    |--------------------------------------------------------------------------
-    | NEW
-    |--------------------------------------------------------------------------
-    */
+  /* =======================================================
+     NEW
+  ======================================================= */
 
   const newRecord = {
     id:
@@ -1533,8 +1753,9 @@ function saveKPISetConfiguration() {
 }
 
 /* =========================================================
-   Hide  KPI SET LIST
+   HIDE KPI SET LIST
 ========================================================= */
+
 function hideSavedKPISetList() {
   const table = document.querySelector(".kpi-set-saved-table");
 
@@ -1609,8 +1830,6 @@ function renderSavedKPISetList() {
 
   tbody.innerHTML = rows
     .map(function (row, index) {
-      const canDelete = true;
-
       return `
         <tr>
           <td>${index + 1}</td>
@@ -1656,15 +1875,15 @@ function renderSavedKPISetList() {
                 <i class="fa-solid fa-pen"></i>
               </button>
 
-                <button
-                  type="button"
-                  class="table-delete-btn"
-                  title="Delete"
-                  data-set-id="${escapeKPISetAttribute(row.setId)}"
-                  data-row-id="${escapeKPISetAttribute(row.id)}"
-                >
-                  <i class="fa-solid fa-trash-can"></i>
-                </button>
+              <button
+                type="button"
+                class="table-delete-btn"
+                title="Delete"
+                data-set-id="${escapeKPISetAttribute(row.setId)}"
+                data-row-id="${escapeKPISetAttribute(row.id)}"
+              >
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
 
             </div>
           </td>
@@ -1718,10 +1937,6 @@ function editSavedKPISetRow(setId, rowId) {
 
   selectedKPIEntryRecordId = entryRecord.id;
 
-  /*
-    Select the corresponding Search Engine radio.
-  */
-
   document.querySelectorAll(".kpi-set-radio").forEach(function (radio) {
     radio.checked = radio.value === String(entryRecord.id);
   });
@@ -1750,6 +1965,7 @@ function editSavedKPISetRow(setId, rowId) {
     behavior: "smooth",
     block: "start",
   });
+
   renderSavedKPISetList();
 }
 
@@ -1775,8 +1991,6 @@ function openKPISetDeleteModal(setId, rowId) {
   if (!row) {
     return;
   }
-
-  // KPI Entry rows can now be deleted from KPI Set.
 
   deletingKPISetId = {
     setId: setId,
@@ -1832,16 +2046,9 @@ function confirmKPISetDelete() {
     return;
   }
 
-  // KPI Entry rows can now be deleted from KPI Set.
-
   record.rows = record.rows.filter(function (item) {
     return item.id !== deletingKPISetId.rowId;
   });
-
-  /*
-    If all manually-created rows are removed and there are
-    no rows left, remove the complete KPI Set configuration.
-  */
 
   if (!record.rows.length) {
     records.splice(recordIndex, 1);
@@ -1915,6 +2122,10 @@ function clearKPISetRows() {
 function updateKPISetSaveButton() {
   const button = document.getElementById("saveKPISetBtn");
 
+  if (!button) {
+    return;
+  }
+
   const year = document.getElementById("kpiSetFinancialYear").value;
 
   const quarter = document.getElementById("kpiSetQuarter").value;
@@ -1970,11 +2181,6 @@ function disableKPISetMonthEditing() {
     month.blur();
   });
 
-  /*
-    Keep the field readonly even if browser inspection is used
-    to remove the readonly attribute.
-  */
-
   const observer = new MutationObserver(function () {
     if (!month.hasAttribute("readonly")) {
       month.setAttribute("readonly", "readonly");
@@ -1988,70 +2194,6 @@ function disableKPISetMonthEditing() {
   observer.observe(month, {
     attributes: true,
     attributeFilter: ["readonly", "tabindex", "aria-readonly"],
-  });
-}
-
-/* =========================================================
-   KPI NAME PROTECTION
-========================================================= */
-
-function protectKPISetName(row) {
-  const nameElement = row.querySelector(".kpi-name-text");
-
-  if (!nameElement) {
-    return;
-  }
-
-  nameElement.setAttribute("contenteditable", "false");
-
-  nameElement.setAttribute("spellcheck", "false");
-
-  nameElement.addEventListener("keydown", function (event) {
-    event.preventDefault();
-  });
-
-  nameElement.addEventListener("beforeinput", function (event) {
-    event.preventDefault();
-  });
-
-  nameElement.addEventListener("paste", function (event) {
-    event.preventDefault();
-  });
-
-  /*
-    Keep KPI name tied to KPI Entry data if the DOM is altered.
-  */
-
-  const entryRecord = getStoredKPIEntryRecords().find(function (record) {
-    return String(record.id) === String(selectedKPIEntryRecordId);
-  });
-
-  if (!entryRecord || !Array.isArray(entryRecord.kpis)) {
-    return;
-  }
-
-  const rowSourceKPIId = row.dataset.sourceKpiId;
-
-  const sourceKPI = entryRecord.kpis.find(function (kpi) {
-    return String(kpi.id || "") === String(rowSourceKPIId || "");
-  });
-
-  if (!sourceKPI) {
-    return;
-  }
-
-  const expectedName = String(sourceKPI.kpiName || "");
-
-  const observer = new MutationObserver(function () {
-    if (nameElement.textContent !== expectedName) {
-      nameElement.textContent = expectedName;
-    }
-  });
-
-  observer.observe(nameElement, {
-    childList: true,
-    characterData: true,
-    subtree: true,
   });
 }
 

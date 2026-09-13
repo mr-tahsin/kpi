@@ -412,16 +412,23 @@
 .kpi-set-table-head,
 .kpi-set-row {
   display: grid;
+
+  /*
+    KPI Name is intentionally one grid column.
+    The input and recommendation select are stacked
+    INSIDE that single column.
+  */
   grid-template-columns:
-    minmax(210px, 2fr)
+    minmax(270px, 2fr)
     minmax(120px, 1fr)
     minmax(110px, 0.8fr)
     minmax(110px, 0.8fr)
     minmax(80px, 0.6fr)
     minmax(190px, 1.5fr)
     minmax(85px, 0.6fr);
+
   align-items: center;
-  min-width: 900px;
+  min-width: 980px;
 }
 
 .kpi-set-table-head {
@@ -439,7 +446,7 @@
 }
 
 .kpi-set-row {
-  min-height: 70px;
+  min-height: 95px;
   border-bottom: 1px solid #eef1f5;
   background: var(--white);
   transition:
@@ -464,18 +471,24 @@
 }
 
 .kpi-set-cell {
+  min-width: 0;
   padding: 9px;
 }
 
+/* =========================================================
+   KPI NAME CELL
+========================================================= */
+
 .kpi-name-cell {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   min-width: 0;
 }
 
 .kpi-drag-handle {
-  flex-shrink: 0;
+  flex: 0 0 auto;
+  margin-top: 12px;
   color: #a8b1bf;
   cursor: grab;
   font-size: 13px;
@@ -485,14 +498,25 @@
   cursor: grabbing;
 }
 
-.kpi-name-text {
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-  user-select: none;
-  word-break: break-word;
+/*
+  IMPORTANT:
+  This is the ONLY wrapper inside the KPI Name column.
+
+  The KPI Name input and Recommended KPIs select
+  are stacked vertically instead of becoming two
+  separate grid columns.
+*/
+.kpi-name-controls {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
+
+/* =========================================================
+   INPUTS / SELECTS
+========================================================= */
 
 .kpi-set-input,
 .kpi-set-select {
@@ -502,10 +526,14 @@
   border-radius: 7px;
   background: #fafbfd;
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
-  transition: all 0.2s ease;
-  font-weight: 600;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+  font-weight: 500;
+  box-sizing: border-box;
 }
 
 .kpi-set-input {
@@ -538,6 +566,76 @@
   appearance: none;
 }
 
+/* =========================================================
+   KPI NAME / RECOMMENDED KPIs
+========================================================= */
+
+.kpi-name-controls {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(150px, 0.9fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.kpi-name-input {
+  width: 100%;
+}
+
+.kpi-recommended-label {
+  display: none;
+}
+
+.kpi-recommended-select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 37px;
+  padding: 0 28px 0 9px;
+  border: 1px solid #d8e2f0;
+  border-radius: 7px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.kpi-recommended-select:hover {
+  border-color: var(--primary);
+}
+
+.kpi-recommended-select:focus {
+  border-color: var(--primary);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(48, 80, 143, 0.07);
+}
+
+.kpi-name-input.kpi-name-locked {
+  background: #f1f5f9;
+  color: var(--text);
+  cursor: not-allowed;
+  border-color: #dbe2ea;
+  box-shadow: none;
+}
+
+.kpi-name-input.kpi-name-locked:focus {
+  border-color: #dbe2ea;
+  background: #f1f5f9;
+  box-shadow: none;
+}
+
+/* =========================================================
+   PRIORITY
+========================================================= */
+
 .priority-badge {
   display: inline-flex;
   align-items: center;
@@ -551,6 +649,10 @@
   font-size: 10px;
   font-weight: 700;
 }
+
+/* =========================================================
+   ROW ACTIONS
+========================================================= */
 
 .kpi-row-actions {
   display: flex;
@@ -805,6 +907,10 @@
   cursor: pointer;
 }
 
+.delete-confirm-btn:hover {
+  filter: brightness(0.95);
+}
+
 /* =========================================================
    TOAST
 ========================================================= */
@@ -848,6 +954,11 @@
   color: var(--success);
 }
 
+.kpi-set-toast-error .toast-icon {
+  background: #fff1f1;
+  color: var(--danger);
+}
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */
@@ -859,6 +970,27 @@
 
   .kpi-set-period-grid .form-group:last-child {
     grid-column: span 2;
+  }
+}
+
+@media (max-width: 900px) {
+  .kpi-set-row {
+    grid-template-columns:
+      minmax(250px, 1.8fr)
+      minmax(110px, 0.7fr)
+      minmax(90px, 0.5fr)
+      minmax(90px, 0.5fr)
+      55px
+      minmax(130px, 0.7fr)
+      70px;
+  }
+
+  .kpi-recommended-select {
+    font-size: 10px;
+  }
+
+  .kpi-name-input {
+    font-size: 12px;
   }
 }
 
@@ -915,6 +1047,136 @@
   }
 }
 
+/* =========================================================
+   MOBILE KPI CARDS
+========================================================= */
+
+@media (max-width: 700px) {
+  .kpi-set-table-wrapper {
+    overflow: visible;
+    border: none;
+  }
+
+  .kpi-set-table-head {
+    display: none;
+  }
+
+  .kpi-set-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-width: 0;
+    min-height: auto;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+  }
+
+  .kpi-set-row:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .kpi-set-cell {
+    min-width: 0;
+    padding: 7px;
+  }
+
+  /* KPI NAME occupies the complete first row */
+  .kpi-name-cell {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+  }
+
+  .kpi-drag-handle {
+    display: none;
+  }
+
+  .kpi-name-controls {
+    width: 100%;
+  }
+
+  .kpi-set-cell:nth-child(2)::before {
+    content: "UOM";
+  }
+
+  .kpi-set-cell:nth-child(3)::before {
+    content: "Weight";
+  }
+
+  .kpi-set-cell:nth-child(4)::before {
+    content: "Target";
+  }
+
+  .kpi-set-cell:nth-child(5)::before {
+    content: "Priority";
+  }
+
+  .kpi-set-cell:nth-child(6)::before {
+    content: "Remarks";
+  }
+
+  .kpi-set-cell:nth-child(7)::before {
+    content: "Action";
+  }
+
+  .kpi-set-cell:nth-child(2)::before,
+  .kpi-set-cell:nth-child(3)::before,
+  .kpi-set-cell:nth-child(4)::before,
+  .kpi-set-cell:nth-child(5)::before,
+  .kpi-set-cell:nth-child(6)::before,
+  .kpi-set-cell:nth-child(7)::before {
+    display: block;
+    margin-bottom: 5px;
+    color: var(--text-light);
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .kpi-set-cell:nth-child(5),
+  .kpi-set-cell:nth-child(7) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kpi-recommended-label {
+    font-size: 10px;
+  }
+
+  .kpi-recommended-select {
+    height: 40px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+
+  .kpi-name-input {
+    height: 42px;
+    font-size: 13px;
+    border-radius: 8px;
+  }
+
+  .kpi-set-input,
+  .kpi-set-select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .kpi-row-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-start;
+  }
+
+  .priority-badge {
+    align-self: flex-start;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
 @media (max-width: 480px) {
   .kpi-set-area-header {
     flex-direction: column;
@@ -922,6 +1184,31 @@
 
   .kpi-set-area-header > span {
     align-self: flex-start;
+  }
+
+  .kpi-set-row {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+
+  .kpi-name-cell,
+  .kpi-set-cell:nth-child(2),
+  .kpi-set-cell:nth-child(3),
+  .kpi-set-cell:nth-child(4),
+  .kpi-set-cell:nth-child(5),
+  .kpi-set-cell:nth-child(6),
+  .kpi-set-cell:nth-child(7) {
+    grid-column: 1;
+  }
+
+  .kpi-recommended-select {
+    height: 42px;
+    font-size: 12px;
+  }
+
+  .kpi-name-input {
+    height: 44px;
+    font-size: 13px;
   }
 
   .search-number {
@@ -937,5 +1224,9 @@
   .kpi-set-search-table td,
   .kpi-set-saved-table td {
     font-size: 10px;
+  }
+
+  .kpi-set-toast {
+    font-size: 11px;
   }
 }
